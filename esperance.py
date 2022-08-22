@@ -38,13 +38,13 @@ def play_game_randomly(
                 print(f"Puzzle has {puzzle} piece(s)\n")
         if dice in range(1, nb_trees + 1):  # 1 to 4 included
             if fruits_dict[dice]:  # there are fruits on this tree
-                fruits_dict[dice] -= 1 
+                fruits_dict[dice] -= 1
                 fruits += 1
             if verbose:
                 print(f"Fruits_dict: {fruits_dict}, fruits picked: {fruits}\n")
         if dice == nb_trees + 1:  # panier: pick randomly any 2 fruits, if available
             if verbose:
-                print('Panier!')
+                print("Panier!")
             for _ in range(fruits_if_panier):
                 available_trees = [
                     tree for tree in range(1, nb_trees + 1) if fruits_dict[tree]
@@ -66,6 +66,7 @@ def play_game_randomly(
         print(f"I win in {nb_turns} turns")
     return 1, nb_turns
 
+
 def play_game_optimized(
     verbose: bool = True,
     nb_trees: int = 4,
@@ -73,7 +74,7 @@ def play_game_optimized(
     puzzle_size: int = 9,
     fruits_if_panier: int = 2,
 ) -> tuple[int]:
-    """Simulates one game of `Le verger` with optimized play: when drawing 'panier', pick the `fruits_if_panier` fruits 
+    """Simulates one game of `Le verger` with optimized play: when drawing 'panier', pick the `fruits_if_panier` fruits
     from the trees that have the largest number of fruits available.
 
     Args:
@@ -104,19 +105,21 @@ def play_game_optimized(
                 print(f"Puzzle has {puzzle} piece(s)\n")
         if dice in range(1, nb_trees + 1):  # 1 to 4 included
             if fruits_dict[dice]:  # there are fruits on this tree
-                fruits_dict[dice] -= 1 
+                fruits_dict[dice] -= 1
                 fruits += 1
             if verbose:
                 print(f"Fruits_dict: {fruits_dict}, fruits picked: {fruits}\n")
-        if dice == nb_trees + 1:  # panier: pick randomly any 2 fruits, if available
+        if dice == nb_trees + 1:  # a smarter way to pick the 2 fruits
             if verbose:
-                print('Panier!')
+                print("Panier!")
             for _ in range(fruits_if_panier):
                 available_trees = [
                     tree for tree in range(1, nb_trees + 1) if fruits_dict[tree]
                 ]
                 if available_trees:
-                    tree_best = max(available_trees, key=fruits_dict.get) # pick the tree with the most fruits so as to preserve rarer fruits
+                    tree_best = max(
+                        available_trees, key=fruits_dict.get
+                    )  # pick the tree with the most fruits so as to preserve rarer fruits
                     if verbose:
                         print(f"Picked {tree_best}")
                     fruits_dict[tree_best] -= 1
@@ -132,15 +135,20 @@ def play_game_optimized(
         print(f"I win in {nb_turns} turns")
     return 1, nb_turns
 
+
 nb_games_experiment = 100_000
 games = [play_game_randomly(verbose=False) for _ in range(nb_games_experiment)]
 turns = [game[1] for game in games]
 winners = [game[0] for game in games]
-print(f'''En moyenne après {nb_games_experiment} parties jouées randomly, la partie se décide en {round(sum(turns)/len(turns),2)} tours\n
-Stats: {round(sum(winners)*100/len(winners),2)}% de victoires''')
+print(
+    f"""En moyenne après {nb_games_experiment} parties jouées randomly, la partie se décide en {round(sum(turns)/len(turns),2)} tours\n
+Stats: {round(sum(winners)*100/len(winners),2)}% de victoires"""
+)
 
 games = [play_game_optimized(verbose=False) for _ in range(nb_games_experiment)]
 turns = [game[1] for game in games]
 winners = [game[0] for game in games]
-print(f'''En moyenne après {nb_games_experiment} parties jouées mieux, la partie se décide en {round(sum(turns)/len(turns),2)} tours\n
-Stats: {round(sum(winners)*100/len(winners),2)}% de victoires''')
+print(
+    f"""En moyenne après {nb_games_experiment} parties jouées mieux, la partie se décide en {round(sum(turns)/len(turns),2)} tours\n
+Stats: {round(sum(winners)*100/len(winners),2)}% de victoires"""
+)
